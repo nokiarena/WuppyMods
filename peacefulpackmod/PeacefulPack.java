@@ -83,15 +83,18 @@ public class PeacefulPack
 	public static Item cookedflesh;
 	public static Item chain;
 	public static Item rottenseed;
-
-	Random rand = new Random();
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+	
+	public static Bool OreEnabled
+    public static Bool FlaxEnabled
+	public static Bool SlimeEnabled
+    public static Bool RottenEnabled
+	public static Bool BlazeEnabled
+	public static Bool GhastOreEnabled
+	public static Bool EnderEnabled
+	public static Bool RemainsEnabled
 		
 		config.load();
+		FlaxBool = config.
 		OreBlockID = config.getBlock("Ore Blocks ID", Configuration.CATEGORY_BLOCK, 306).getInt();
 		FlaxID = config.getBlock("Flax ID", Configuration.CATEGORY_BLOCK, 307).getInt();
 		SlimeslabID = config.getBlock("Slime Slab ID", Configuration.CATEGORY_BLOCK, 308).getInt();
@@ -112,6 +115,16 @@ public class PeacefulPack
 		ChainID = config.getItem("Chain ID", Configuration.CATEGORY_ITEM, 4042).getInt();
 		RottenPlantSeedID = config.getItem("Rotten Plant Seed ID", Configuration.CATEGORY_ITEM, 4043).getInt();
 		
+		this.OreEnabled = config.get("general", "Enable Ore", true).getBoolean(true);
+		this.FlaxEnabled = config.get("general", "Enable Flax", true).getBoolean(true);
+		this.SlimeEnabled = config.get("general", "Enable Slime", true).getBoolean(true);
+		this.RottenEnabled = config.get("general", "Enable Rotten Plant", true).getBoolean(true);
+		this.BlazeEnabled = config.get("general", "Enable Blaze", true).getBoolean(true);
+		this.GhastOreEnabled = config.get("general", "Enable GhastOre", true).getBoolean(true);		
+		this.EnderEnabled = config.get("general", "Enable Ender", true).getBoolean(true);
+		this.RemainsEnabled = config.get("general", "Enable Remains", true).getBoolean(true);
+		
+		
 		config.save();
 	}
 	
@@ -119,39 +132,62 @@ public class PeacefulPack
 	public void load(FMLInitializationEvent event) 
 	{
 		//blocks 
-		oreblock = new BlockPeacefulOres(OreBlockID).setStepSound(Block.soundStoneFootstep).setHardness(3F).setResistance(1.0F).setUnlocalizedName("oreblock");
-		flax = new Blockflax(FlaxID).setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("flax");
-		slimeslab = new Blockslime(SlimeslabID).setHardness(1F).setLightValue(0.5F).setResistance(1.0F).setUnlocalizedName("slime");
-		rottenplant = new BlockRottenPlant(RottenPlantID, PeacefulPack.modid + ":rotten plant 1").setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("rottenplant");
-		blazelog = new BlockBlazelog(BlazelogID).setStepSound(Block.soundWoodFootstep).setHardness(2F).setResistance(1.0F).setUnlocalizedName("blazelog");
-		blazeleaves = new BlockBlazeleaves(BlazeLeavesID).setLightValue(0.7F).setStepSound(Block.soundGrassFootstep).setHardness(0.2F).setLightOpacity(1).setUnlocalizedName("blazeleaves");
-		ghastore = new BlockGhastOre(GhastOreID).setStepSound(Block.soundStoneFootstep).setHardness(3F).setResistance(1.0F).setUnlocalizedName("ghastore");
-		enderclam = new BlockEnderclam(EnderClamID).setStepSound(Block.soundStoneFootstep).setLightValue(0.5F).setHardness(3F).setResistance(1.0F).setUnlocalizedName("enderclam");;
-		blazeSapling = new BlockBlazeSapling(BlazeSaplingID).setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("blazeSapling");
-		remains = new BlockBuriedRemains(RemainsID).setStepSound(Block.soundGravelFootstep).setHardness(0.5F).setUnlocalizedName("remains");
+		if (OreEnabled)
+			oreblock = new BlockPeacefulOres(OreBlockID).setStepSound(Block.soundStoneFootstep).setHardness(3F).setResistance(1.0F).setUnlocalizedName("oreblock");
+		if (FlaxEnabled)
+			flax = new Blockflax(FlaxID).setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("flax");
+		if (SlimeEnabled)
+			slimeslab = new Blockslime(SlimeslabID).setHardness(1F).setLightValue(0.5F).setResistance(1.0F).setUnlocalizedName("slime");
+		if (RottenEnabled)
+			rottenplant = new BlockRottenPlant(RottenPlantID, PeacefulPack.modid + ":rotten plant 1").setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("rottenplant");
+		if (BlazeEnabled){
+			blazelog = new BlockBlazelog(BlazelogID).setStepSound(Block.soundWoodFootstep).setHardness(2F).setResistance(1.0F).setUnlocalizedName("blazelog");
+			blazeSapling = new BlockBlazeSapling(BlazeSaplingID).setStepSound(Block.soundGrassFootstep).setHardness(0.0F).setUnlocalizedName("blazeSapling");
+			blazeleaves = new BlockBlazeleaves(BlazeLeavesID).setLightValue(0.7F).setStepSound(Block.soundGrassFootstep).setHardness(0.2F).setLightOpacity(1).setUnlocalizedName("blazeleaves");
+		}
+		if (GhastOreEnabled)
+			ghastore = new BlockGhastOre(GhastOreID).setStepSound(Block.soundStoneFootstep).setHardness(3F).setResistance(1.0F).setUnlocalizedName("ghastore");
+		if (EnderEnabled)
+			enderclam = new BlockEnderclam(EnderClamID).setStepSound(Block.soundStoneFootstep).setLightValue(0.5F).setHardness(3F).setResistance(1.0F).setUnlocalizedName("enderclam");;
+		if (RemainsEnabled)
+			remains = new BlockBuriedRemains(RemainsID).setStepSound(Block.soundGravelFootstep).setHardness(0.5F).setUnlocalizedName("remains");
 		
 		Block.blocksList[customWebID] = null;
 		customWeb = new BlockCustomWeb(customWebID).setLightOpacity(1).setHardness(4.0F).setUnlocalizedName("web").func_111022_d("web");
 		
 		//items
-		sulphDust = new ItemDust(SulphurCrystalID).setUnlocalizedName("sulphdust");
-		niterDust = new ItemDust(NiterCrystalID).setUnlocalizedName("niterdust");
-		flaxfibre = new ItemDust(FlaxFibreID).setUnlocalizedName("flaxfibre");
-		cloth = new ItemDust(ClothID).setUnlocalizedName("cloth");
-		flaxseed = new Itemseed(FlaxSeedID, flax.blockID, Block.grass.blockID).setUnlocalizedName("flaxseed");
+		if (OreEnabled) {
+			sulphDust = new ItemDust(SulphurCrystalID).setUnlocalizedName("sulphdust");
+			niterDust = new ItemDust(NiterCrystalID).setUnlocalizedName("niterdust");
+		}
+		if (FlaxEnabled){
+			flaxfibre = new ItemDust(FlaxFibreID).setUnlocalizedName("flaxfibre");
+			cloth = new ItemDust(ClothID).setUnlocalizedName("cloth");
+			flaxseed = new Itemseed(FlaxSeedID, flax.blockID, Block.grass.blockID).setUnlocalizedName("flaxseed");
+		}
+		if (RottenEnabled)
 		cookedflesh = new ItemPeacefulFood(CookedfleshID, 5, true).setUnlocalizedName("cookedflesh");
+		
 		chain = new ItemDust(ChainID).setUnlocalizedName("chain");
 		rottenseed = new Itemseed(RottenPlantSeedID, rottenplant.blockID, Block.netherrack.blockID).setUnlocalizedName("rottenseed");
 		
 		//block register
-		GameRegistry.registerBlock(flax, "Wuppy29_Flax");
-		GameRegistry.registerBlock(slimeslab, "Wuppy29_SlimeSlab");		
-		GameRegistry.registerBlock(rottenplant, "Wuppy29_ RottenPlant");
-		GameRegistry.registerBlock(blazelog, "Wuppy29_BlazeLog");
-		GameRegistry.registerBlock(blazeleaves, "Wuppy29_BlazeLeaves");
-		GameRegistry.registerBlock(ghastore, "Wuppy29_GhastOre");
-		GameRegistry.registerBlock(enderclam, "Wuppy29_EnderClam");
-		GameRegistry.registerBlock(blazeSapling, "Wuppy29_BlazeSapling");
+		if (FlaxEnabled)
+			GameRegistry.registerBlock(flax, "Wuppy29_Flax");
+		if (SlimeEnabled)
+			GameRegistry.registerBlock(slimeslab, "Wuppy29_SlimeSlab");		
+		if (RottenEnabled)
+			GameRegistry.registerBlock(rottenplant, "Wuppy29_ RottenPlant");
+		if (BlazeEnabled){
+			GameRegistry.registerBlock(blazelog, "Wuppy29_BlazeLog");
+			GameRegistry.registerBlock(blazeleaves, "Wuppy29_BlazeLeaves");
+			GameRegistry.registerBlock(blazeSapling, "Wuppy29_BlazeSapling");
+		}
+		if (GhastOreEnabled)
+			GameRegistry.registerBlock(ghastore, "Wuppy29_GhastOre");
+		if (EnderEnabled)
+			GameRegistry.registerBlock(enderclam, "Wuppy29_EnderClam");
+		if (RemainsEnabled)
 		GameRegistry.registerBlock(remains, "Wuppy29_Remains");
 		
 		//fuel
@@ -189,48 +225,66 @@ public class PeacefulPack
 	    	name = "Blech";
 	    }
 		
-		LanguageRegistry.addName(slimeslab, name);
-		
-		LanguageRegistry.instance().addStringLocalization("tile.flax.name", "en_US", "Flax");
-		LanguageRegistry.instance().addStringLocalization("tile.flax.name", "nl_NL", "vlas");
-		LanguageRegistry.instance().addStringLocalization("tile.rottenplant.name", "en_US", "Rotten Plant");
-		LanguageRegistry.instance().addStringLocalization("tile.rottenplant.name", "nl_NL", "Verrotte Plant");
-		LanguageRegistry.instance().addStringLocalization("tile.blazelog.name", "en_US", "Blaze Log");
-		LanguageRegistry.instance().addStringLocalization("tile.blazelog.name", "nl_NL", "Blaze Hout");
-		LanguageRegistry.instance().addStringLocalization("tile.blazeleaves.name", "en_US", "Blaze Leaves");
-		LanguageRegistry.instance().addStringLocalization("tile.blazeleaves.name", "nl_NL", "Blaze Bladeren");
-		LanguageRegistry.instance().addStringLocalization("tile.ghastore.name", "en_US", "Ghast Ore");
-		LanguageRegistry.instance().addStringLocalization("tile.ghastore.name", "nl_NL", "Ghast Erts");
-		LanguageRegistry.instance().addStringLocalization("tile.enderclam.name", "en_US", "Ender Clam");
-		LanguageRegistry.instance().addStringLocalization("tile.enderclam.name", "nl_NL", "Ender Oester");
-		LanguageRegistry.instance().addStringLocalization("tile.blazeSapling.name", "en_US", "Blaze Sapling");
-		LanguageRegistry.instance().addStringLocalization("tile.blazeSapling.name", "nl_NL", "Blaze Kiemplant");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.sulphur.name", "en_US", "Sulphur Ore");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.sulphur.name", "nl_NL", "Zwavel Erts");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.niter.name", "en_US", "Niter Ore");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.niter.name", "nl_NL", "Salpeter Erts");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.fossil.name", "en_US", "Fossils");
-		LanguageRegistry.instance().addStringLocalization("tile.oreblock.fossil.name", "nl_NL", "Fossiel");
-		LanguageRegistry.instance().addStringLocalization("tile.remains.name", "en_US", "Buried Remains");
-		LanguageRegistry.instance().addStringLocalization("tile.remains.name", "nl_NL", "Begraven Restanten");
+		if (SlimeEnabled)
+			LanguageRegistry.addName(slimeslab, name);
+		if (FlaxEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.flax.name", "en_US", "Flax");
+			LanguageRegistry.instance().addStringLocalization("tile.flax.name", "nl_NL", "vlas");
+		}
+		if (RottenEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.rottenplant.name", "en_US", "Rotten Plant");
+			LanguageRegistry.instance().addStringLocalization("tile.rottenplant.name", "nl_NL", "Verrotte Plant");
+		}
+		if (BlazeEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.blazelog.name", "en_US", "Blaze Log");
+			LanguageRegistry.instance().addStringLocalization("tile.blazelog.name", "nl_NL", "Blaze Hout");
+			LanguageRegistry.instance().addStringLocalization("tile.blazeleaves.name", "en_US", "Blaze Leaves");
+			LanguageRegistry.instance().addStringLocalization("tile.blazeleaves.name", "nl_NL", "Blaze Bladeren");
+			LanguageRegistry.instance().addStringLocalization("tile.blazeSapling.name", "en_US", "Blaze Sapling");
+			LanguageRegistry.instance().addStringLocalization("tile.blazeSapling.name", "nl_NL", "Blaze Kiemplant");
+		}
+		if (GhastOreEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.ghastore.name", "en_US", "Ghast Ore");
+			LanguageRegistry.instance().addStringLocalization("tile.ghastore.name", "nl_NL", "Ghast Erts");
+		}
+		if (EnderEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.enderclam.name", "en_US", "Ender Clam");
+			LanguageRegistry.instance().addStringLocalization("tile.enderclam.name", "nl_NL", "Ender Oester");
+		}
+		if (OreEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.sulphur.name", "en_US", "Sulphur Ore");
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.sulphur.name", "nl_NL", "Zwavel Erts");
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.niter.name", "en_US", "Niter Ore");
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.niter.name", "nl_NL", "Salpeter Erts");
+			LanguageRegistry.instance().addStringLocalization(sulphDust.getUnlocalizedName() + ".name", "en_US", "Sulphur Crystal");
+			LanguageRegistry.instance().addStringLocalization(sulphDust.getUnlocalizedName() + ".name", "nl_NL", "Zwavel Kristal");
+			LanguageRegistry.instance().addStringLocalization(niterDust.getUnlocalizedName() + ".name", "en_US", "Niter Crystal");
+			LanguageRegistry.instance().addStringLocalization(niterDust.getUnlocalizedName() + ".name", "nl_NL", "Salpeter Kristal");
+		}
+		if (RemainsEnabled){
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.fossil.name", "en_US", "Fossils");
+			LanguageRegistry.instance().addStringLocalization("tile.oreblock.fossil.name", "nl_NL", "Fossiel");
+			LanguageRegistry.instance().addStringLocalization("tile.remains.name", "en_US", "Buried Remains");
+			LanguageRegistry.instance().addStringLocalization("tile.remains.name", "nl_NL", "Begraven Restanten");
+		}
 		
 		//item names
-		LanguageRegistry.instance().addStringLocalization(sulphDust.getUnlocalizedName() + ".name", "en_US", "Sulphur Crystal");
-		LanguageRegistry.instance().addStringLocalization(sulphDust.getUnlocalizedName() + ".name", "nl_NL", "Zwavel Kristal");
-		LanguageRegistry.instance().addStringLocalization(niterDust.getUnlocalizedName() + ".name", "en_US", "Niter Crystal");
-		LanguageRegistry.instance().addStringLocalization(niterDust.getUnlocalizedName() + ".name", "nl_NL", "Salpeter Kristal");
-		LanguageRegistry.instance().addStringLocalization(flaxfibre.getUnlocalizedName() + ".name", "en_US", "Flax Fibre");
-		LanguageRegistry.instance().addStringLocalization(flaxfibre.getUnlocalizedName() + ".name", "nl_NL", "Vlas Vezel");
-		LanguageRegistry.instance().addStringLocalization(cloth.getUnlocalizedName() + ".name", "en_US", "Cloth");
-		LanguageRegistry.instance().addStringLocalization(cloth.getUnlocalizedName() + ".name", "nl_NL", "Doek");
-		LanguageRegistry.instance().addStringLocalization(flaxseed.getUnlocalizedName() + ".name", "en_US", "Flax Seed");
-		LanguageRegistry.instance().addStringLocalization(flaxseed.getUnlocalizedName() + ".name", "nl_NL", "Vlas Zaad");
-		LanguageRegistry.instance().addStringLocalization(cookedflesh.getUnlocalizedName() + ".name", "en_US", "Cooked Flesh");
-		LanguageRegistry.instance().addStringLocalization(cookedflesh.getUnlocalizedName() + ".name", "nl_NL", "Gekookt Vlees");
-		LanguageRegistry.instance().addStringLocalization(chain.getUnlocalizedName() + ".name", "en_US", "Chain Material");
-		LanguageRegistry.instance().addStringLocalization(chain.getUnlocalizedName() + ".name", "nl_NL", "Keten Materiaal");
-		LanguageRegistry.instance().addStringLocalization(rottenseed.getUnlocalizedName() + ".name", "en_US", "Rotten Seed");
-		LanguageRegistry.instance().addStringLocalization(rottenseed.getUnlocalizedName() + ".name", "nl_NL", "Verrot Zaad");
+		if (FlaxEnabled){
+			LanguageRegistry.instance().addStringLocalization(flaxfibre.getUnlocalizedName() + ".name", "en_US", "Flax Fibre");
+			LanguageRegistry.instance().addStringLocalization(flaxfibre.getUnlocalizedName() + ".name", "nl_NL", "Vlas Vezel");
+			LanguageRegistry.instance().addStringLocalization(cloth.getUnlocalizedName() + ".name", "en_US", "Cloth");
+			LanguageRegistry.instance().addStringLocalization(cloth.getUnlocalizedName() + ".name", "nl_NL", "Doek");
+			LanguageRegistry.instance().addStringLocalization(flaxseed.getUnlocalizedName() + ".name", "en_US", "Flax Seed");
+			LanguageRegistry.instance().addStringLocalization(flaxseed.getUnlocalizedName() + ".name", "nl_NL", "Vlas Zaad");
+		}
+			LanguageRegistry.instance().addStringLocalization(cookedflesh.getUnlocalizedName() + ".name", "en_US", "Cooked Flesh");
+			LanguageRegistry.instance().addStringLocalization(cookedflesh.getUnlocalizedName() + ".name", "nl_NL", "Gekookt Vlees");
+			LanguageRegistry.instance().addStringLocalization(chain.getUnlocalizedName() + ".name", "en_US", "Chain Material");
+			LanguageRegistry.instance().addStringLocalization(chain.getUnlocalizedName() + ".name", "nl_NL", "Keten Materiaal");
+		if (RottenEnabled){
+			LanguageRegistry.instance().addStringLocalization(rottenseed.getUnlocalizedName() + ".name", "en_US", "Rotten Seed");
+			LanguageRegistry.instance().addStringLocalization(rottenseed.getUnlocalizedName() + ".name", "nl_NL", "Verrot Zaad");
+		}
 		
 		Item.itemsList[OreBlockID] = new ItemPeacefulOresblock(OreBlockID-256, oreblock).setUnlocalizedName("oreblock");
 		
@@ -240,75 +294,99 @@ public class PeacefulPack
 		GameRegistry.addSmelting(Item.rottenFlesh.itemID, new ItemStack(cookedflesh, 1), 1F);
 		
 		//recipes
-		GameRegistry.addRecipe(new ItemStack(slimeslab, 1), new Object[]
-		        {
-		        	"XX", "XX", 'X', Item.slimeBall
-		        });
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.gunpowder, 2), new Object[]
-		        {
-		        	new ItemStack(sulphDust), new ItemStack(niterDust), new ItemStack(Item.coal)
-		        });
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.gunpowder, 2), new Object[]
-		        {
-		        	new ItemStack(sulphDust), new ItemStack(niterDust), new ItemStack(Item.coal, 1)
-		        });
-		        
-		GameRegistry.addRecipe(new ItemStack(Block.torchWood, 4), new Object[]
-		        {
-		        	"X", "Z", 'X', sulphDust, 'Z', Item.stick
-		        });
-		        
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.dyePowder, 2, 15), new Object[]
-		        {
-		        	new ItemStack(Item.dyePowder, 1, 15), new ItemStack(niterDust)
-		        });   
-		        
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.silk, 2), new Object[]
-		        {
-		        	new ItemStack(flaxfibre), new ItemStack(flaxfibre)
-		        });
-		        
-		GameRegistry.addShapelessRecipe(new ItemStack(flaxseed, 3), new Object[]
-				{
-					new ItemStack(flaxfibre)
-				});
+		if (SlimeEnabled){
+			GameRegistry.addRecipe(new ItemStack(slimeslab, 1), new Object[]
+					{
+						"XX", "XX", 'X', Item.slimeBall
+					});
+		}
+		if (OreEnabled){		
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.gunpowder, 2), new Object[]
+					{
+						new ItemStack(sulphDust), new ItemStack(niterDust), new ItemStack(Item.coal)
+					});
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.gunpowder, 2), new Object[]
+					{
+						new ItemStack(sulphDust), new ItemStack(niterDust), new ItemStack(Item.coal, 1)
+					});
+					
+			GameRegistry.addRecipe(new ItemStack(Block.torchWood, 4), new Object[]
+					{
+						"X", "Z", 'X', sulphDust, 'Z', Item.stick
+					});
+					
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.dyePowder, 2, 15), new Object[]
+					{
+						new ItemStack(Item.dyePowder, 1, 15), new ItemStack(niterDust)
+					});   
+					
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.writableBook, 1), new Object[]
+					{
+						new ItemStack(Item.book), new ItemStack(niterDust), new ItemStack(Item.feather)
+					});
+		}        
+		if (FlaxEnabled){
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.silk, 2), new Object[]
+					{
+						new ItemStack(flaxfibre), new ItemStack(flaxfibre)
+					});
+					
+			GameRegistry.addShapelessRecipe(new ItemStack(flaxseed, 3), new Object[]
+					{
+						new ItemStack(flaxfibre)
+					});
+			
+			GameRegistry.addShapelessRecipe(new ItemStack(Block.cloth, 1, 0), new Object[]
+				   {
+						new ItemStack(cloth), new ItemStack(cloth)
+				   });
+					
+			GameRegistry.addShapelessRecipe(new ItemStack(cloth, 1), new Object[]
+				   {
+						new ItemStack(Item.silk), new ItemStack(Item.silk)
+				   });
+			//leather armor
+			GameRegistry.addRecipe(new ItemStack(Item.helmetLeather, 1), new Object[]
+				   {
+						"XXX", "X X", 'X', cloth
+				   });
+			GameRegistry.addRecipe(new ItemStack(Item.plateLeather, 1), new Object[]
+				   {
+						"X X", "XXX", "XXX", 'X', cloth
+				   });
+			GameRegistry.addRecipe(new ItemStack(Item.bootsLeather, 1), new Object[]
+				   {
+						"X X", "X X", 'X', cloth
+				   });
+			GameRegistry.addRecipe(new ItemStack(Item.legsLeather, 1), new Object[]
+					{
+						"XXX", "X X", "X X", 'X', cloth
+					});
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.book), new Object[]
+					{
+						new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(cloth)
+					});
+		}
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(Block.cloth, 1, 0), new Object[]
-		       {
-		        	new ItemStack(cloth), new ItemStack(cloth)
-		       });
-		        
-		GameRegistry.addShapelessRecipe(new ItemStack(cloth, 1), new Object[]
-		       {
-		        	new ItemStack(Item.silk), new ItemStack(Item.silk)
-		       });
+		if (RemainsEnabled)
+		{
+			GameRegistry.addShapelessRecipe(new ItemStack(Item.leather), new Object[]
+					{
+						new ItemStack(cookedflesh), new ItemStack(cookedflesh)
+					});
+		}
+		if (GhastOreEnabled)
+		{
+				GameRegistry.addRecipe(new ItemStack(Item.ghastTear, 4), new Object[]
+				{
+					"XXX", "XZX", "XXX", 'Z', Item.bucketLava, 'X', ghastore
+				});
+		}
+		
 		GameRegistry.addRecipe(new ItemStack(chain, 6), new Object[]
-				{
-					"XXX", "XXX", "XXX", 'X', Block.fenceIron
-				});
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.book), new Object[]
-				{
-					new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(cloth)
-				});
-		
-		//leather armor
-		GameRegistry.addRecipe(new ItemStack(Item.helmetLeather, 1), new Object[]
-		       {
-		       		"XXX", "X X", 'X', cloth
-		       });
-		GameRegistry.addRecipe(new ItemStack(Item.plateLeather, 1), new Object[]
-		       {
-		        	"X X", "XXX", "XXX", 'X', cloth
-		       });
-		GameRegistry.addRecipe(new ItemStack(Item.bootsLeather, 1), new Object[]
-		       {
-		        	"X X", "X X", 'X', cloth
-		       });
-		GameRegistry.addRecipe(new ItemStack(Item.legsLeather, 1), new Object[]
-		        {
-		        	"XXX", "X X", "X X", 'X', cloth
-		        });
-		
+		{
+			"XXX", "XXX", "XXX", 'X', Block.fenceIron
+		});		
 		//chain armor
 		GameRegistry.addRecipe(new ItemStack(Item.helmetChain, 1), new Object[]
 			    {
@@ -327,18 +405,5 @@ public class PeacefulPack
 			      	"XXX", "X X", "X X", 'X', chain
 			    });
 		
-		GameRegistry.addRecipe(new ItemStack(Item.ghastTear, 4), new Object[]
-				{
-					"XXX", "XZX", "XXX", 'Z', Item.bucketLava, 'X', ghastore
-				});
-		
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.leather), new Object[]
-				{
-					new ItemStack(cookedflesh), new ItemStack(cookedflesh)
-				});
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.writableBook, 1), new Object[]
-				{
-					new ItemStack(Item.book), new ItemStack(niterDust), new ItemStack(Item.feather)
-				});
 	}
 }
